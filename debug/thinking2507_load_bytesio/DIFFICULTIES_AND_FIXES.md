@@ -181,6 +181,27 @@ The torch_dist directory is the same size (~57 GB) and contains the same number 
 
 ---
 
+## 14. `sgl_kernel.flash_attn` raises at module-import time when FA3 isn't built
+
+**Symptom.** Trying to load `Qwen3.5-4B` (or any Qwen3.5 variant) failed with `ValueError: Qwen3_5ForConditionalGeneration has no SGlang implementation`, even though `sglang/srt/models/qwen3_5.py` is present and `EntryClass` lists the class. Earlier log entry showed why: `Ignore import error when loading sglang.srt.models.qwen3_5: Can not import FA3 in sgl_kernel.`
+
+**Diagnosis.** `sgl_kernel/flash_attn.py` line 6-11 has a top-level `try: from sgl_kernel import flash_ops; except: raise ImportError("Can not import FA3 in sgl_kernel…")`. Our DeltaAI sgl-kernel build excludes FA3 (memory limit at build time, gated by `SGL_KERNEL_ENABLE_FA3=OFF`), so this raise fires. Anything that imports `sgl_kernel.flash_attn` cascades — including `sglang/srt/layers/attention/flashattention_backend.py`, which is transitively imported when sglang's `ModelRegistry` scans `sglang.srt.models.qwen3_5`. The registry's `try/except` then silently skips qwen3_5 and the model never gets registered.
+
+**Fix.** Patch `flash_attn.py` to convert the top-level raise into a placeholder so the module imports cleanly. We use `--sglang-attention-backend flashinfer`, so FA3 functions are never actually invoked at runtime:
+```python
+try:
+    from sgl_kernel import flash_ops
+    _FA3_AVAILABLE = True
+except Exception:
+    flash_ops = None
+    _FA3_AVAILABLE = False
+```
+Patch is applied to the live install at `/work/nvme/bgqz/bzhang31/envs/slime/lib/python3.12/site-packages/sgl_kernel/flash_attn.py`. After this, `from sglang.srt.models.qwen3_5 import Qwen3_5ForConditionalGeneration` succeeds and the architecture lookup hits the native sglang implementation instead of falling back to transformers.
+
+**Validated.** Qwen3.5-4B GRPO smoke ran 3 full steps on alloc 2295059 (1 node × 4 GH200), no FA3-related errors. TFlops ramped from 23 (step 1 warmup) → 78 → 121 (steady state). Same patch is required for any Qwen3.5 variant (4B/9B/27B/35B-A3B).
+
+---
+
 ## 13. Host-RAM accumulation across GRPO iterations (still open)
 
 **Symptom.** Training runs successfully for 1-3 GRPO steps, then a Ray worker is killed with:
