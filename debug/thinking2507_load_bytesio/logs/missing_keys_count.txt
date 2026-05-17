@@ -1,0 +1,7 @@
+478
+--- sample 'not in state dict' lines:
+[36m(MegatronTrainRayActor pid=2216058, ip=172.28.82.159)[0m decoder.layers.0.self_attention.linear_proj.weight from model not in state dict, will skip
+[36m(MegatronTrainRayActor pid=2216058, ip=172.28.82.159)[0m decoder.layers.0.self_attention.linear_qkv.layer_norm_weight from model not in state dict, will skip
+[36m(MegatronTrainRayActor pid=2216058, ip=172.28.82.159)[0m decoder.layers.0.self_attention.linear_qkv.weight from model not in state dict, will skip
+[36m(MegatronTrainRayActor pid=2216058, ip=172.28.82.159)[0m decoder.layers.0.self_attention.q_layernorm.weight from model not in state dict, will skip
+[36m(MegatronTrainRayActor pid=2216058, ip=172.28.82.159)[0m decoder.layers.0.self_attention.k_layernorm.weight from model not in state dict, will skip

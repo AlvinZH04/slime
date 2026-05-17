@@ -19,23 +19,11 @@ class InfoActor:
 
 def sort_key(x):
     index, node_identifier, gpu_id = x
-    # Sort by node IP number and then by GPU ID
-    try:
-        # try to parse it as an IP address.
-        ip_address = node_identifier
-        node_ip_parts = list(map(int, ip_address.split(".")))
-    except ValueError:
-        # Try to resolve the hostname to an IP address.
-        try:
-            ip_address = socket.gethostbyname(node_identifier)
-            node_ip_parts = list(map(int, ip_address.split(".")))
-        except (socket.gaierror, TypeError):
-            # Instead, we convert each character of the original identifier string
-            # to its ASCII value. This provides a stable and consistent numerical
-            # representation that allows for sorting.
-            node_ip_parts = [ord(c) for c in node_identifier]
-
-    return (node_ip_parts, gpu_id)
+    # Group by the raw node_identifier (whatever ray returned per node) and order
+    # by gpu_id within node. Using the string directly avoids non-deterministic
+    # DNS resolution that previously broke within-node ordering when bundles on
+    # the same node sorted into [2, 0, 1, 3] instead of [0, 1, 2, 3].
+    return (str(node_identifier), int(gpu_id))
 
 
 def _create_placement_group(num_gpus):

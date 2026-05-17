@@ -1,0 +1,74 @@
+    mcore_state_dict = _replace_sharded_keys_with_state_dict_keys(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/nvme/bgqz/bzhang31/src/Megatron-LM/megatron/core/dist_checkpointing/strategies/torch.py", line 439, in _replace_sharded_keys_with_state_dict_keys
+    assert len(tensors) == len(rename_mapping[k])
+           ^^^^^^^^^^^^
+TypeError: object of type '_io.BytesIO' has no len()
+Traceback (most recent call last):
+  File "/projects/bgqz/bzhang31/slime/train.py", line 107, in <module>
+    train(args)
+  File "/projects/bgqz/bzhang31/slime/train.py", line 24, in train
+    actor_model, critic_model = create_training_models(args, pgs, rollout_manager)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/projects/bgqz/bzhang31/slime/slime/ray/placement_group.py", line 142, in create_training_models
+    actor_start_rollout_ids = ray.get(
+                              ^^^^^^^^
+  File "/work/nvme/bgqz/bzhang31/envs/slime/lib/python3.12/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/work/nvme/bgqz/bzhang31/envs/slime/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 107, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/work/nvme/bgqz/bzhang31/envs/slime/lib/python3.12/site-packages/ray/_private/worker.py", line 2980, in get
+    values, debugger_breakpoint = worker.get_objects(
+                                  ^^^^^^^^^^^^^^^^^^^
+  File "/work/nvme/bgqz/bzhang31/envs/slime/lib/python3.12/site-packages/ray/_private/worker.py", line 1023, in get_objects
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(TypeError): [36mray::MegatronTrainRayActor.init()[39m (pid=455830, ip=172.28.82.152, actor_id=321fbc195c16d8a991d4842802000000, repr=<slime.backends.megatron_utils.actor.MegatronTrainRayActor object at 0xfffc20ceff50>)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/projects/bgqz/bzhang31/slime/slime/utils/timer.py", line 97, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/projects/bgqz/bzhang31/slime/slime/backends/megatron_utils/actor.py", line 84, in init
+    self.model, self.optimizer, self.opt_param_scheduler, loaded_rollout_id = initialize_model_and_optimizer(
+                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/projects/bgqz/bzhang31/slime/slime/backends/megatron_utils/model.py", line 899, in initialize_model_and_optimizer
+--
+    mcore_state_dict = _replace_sharded_keys_with_state_dict_keys(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/nvme/bgqz/bzhang31/src/Megatron-LM/megatron/core/dist_checkpointing/strategies/torch.py", line 439, in _replace_sharded_keys_with_state_dict_keys
+    assert len(tensors) == len(rename_mapping[k])
+           ^^^^^^^^^^^^
+TypeError: object of type '_io.BytesIO' has no len()
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mqwen3-30B-A3B-Thinking-2507-grpo-math_kzkgbitr-RANK_0[0m at: [34mhttps://wandb.ai/bzhang90-johns-hopkins-university/slime-deltaai/runs/ikolapcw[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../work/hdd/bgqz/bzhang31/wandb/wandb/run-20260517_102628-ikolapcw/logs[0m
+[36m(MegatronTrainRayActor pid=3394456, ip=172.28.82.13)[0m decoder.layers.47.mlp.experts.experts.linear_fc2.weight from model not in state dict, will skip[32m [repeated 41764x across cluster][0m
+[36m(MegatronTrainRayActor pid=3395321, ip=172.28.82.13)[0m [2026-05-17 10:34:16] utils.py:903 - make_tp_sharded_tensor_for_checkpoint received extra kwargs: ['allow_shape_mismatch'][32m [repeated 15x across cluster][0m
+[36m(MegatronTrainRayActor pid=3394456, ip=172.28.82.13)[0m /work/nvme/bgqz/bzhang31/src/Megatron-LM/megatron/core/dist_checkpointing/strategies/torch.py:958: FutureWarning: `load_state_dict` is deprecated and will be removed in future versions. Please use `load` instead.[32m [repeated 15x across cluster][0m
+[36m(MegatronTrainRayActor pid=3394456, ip=172.28.82.13)[0m   checkpoint.load_state_dict([32m [repeated 15x across cluster][0m
+[36m(MegatronTrainRayActor pid=3394456, ip=172.28.82.13)[0m /work/nvme/bgqz/bzhang31/envs/slime/lib/python3.12/site-packages/torch/distributed/checkpoint/planner_helpers.py:418: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.[32m [repeated 15x across cluster][0m
+[36m(MegatronTrainRayActor pid=3394456, ip=172.28.82.13)[0m   device = getattr(value, "device", None)[32m [repeated 15x across cluster][0m
+2026-05-17 10:34:28,339	ERR cli.py:73 -- [31m---------------------------------------[39m
+2026-05-17 10:34:28,339	ERR cli.py:74 -- [31mJob 'raysubmit_hDsNEYuat1Bhq7k7' failed[39m
+2026-05-17 10:34:28,339	ERR cli.py:75 -- [31m---------------------------------------[39m
+2026-05-17 10:34:28,339	INFO cli.py:88 -- Status message: Job entrypoint command failed with exit code 1, last available logs (truncated to 20,000 chars):
+TypeError: object of type '_io.BytesIO' has no len()
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mqwen3-30B-A3B-Thinking-2507-grpo-math_kzkgbitr-RANK_0[0m at: [34mhttps://wandb.ai/bzhang90-johns-hopkins-university/slime-deltaai/runs/ikolapcw[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../work/hdd/bgqz/bzhang31/wandb/wandb/run-20260517_102628-ikolapcw/logs[0m
+[36m(MegatronTrainRayActor pid=3394456, ip=172.28.82.13)[0m decoder.layers.47.mlp.experts.experts.linear_fc2.weight from model not in state dict, will skip[32m [repeated 41764x across cluster][0m
+[36m(MegatronTrainRayActor pid=3395321, ip=172.28.82.13)[0m [2026-05-17 10:34:16] utils.py:903 - make_tp_sharded_tensor_for_checkpoint received extra kwargs: ['allow_shape_mismatch'][32m [repeated 15x across cluster][0m
+[36m(MegatronTrainRayActor pid=3394456, ip=172.28.82.13)[0m /work/nvme/bgqz/bzhang31/src/Megatron-LM/megatron/core/dist_checkpointing/strategies/torch.py:958: FutureWarning: `load_state_dict` is deprecated and will be removed in future versions. Please use `load` instead.[32m [repeated 15x across cluster][0m
+[36m(MegatronTrainRayActor pid=3394456, ip=172.28.82.13)[0m   checkpoint.load_state_dict([32m [repeated 15x across cluster][0m
+[36m(MegatronTrainRayActor pid=3394456, ip=172.28.82.13)[0m /work/nvme/bgqz/bzhang31/envs/slime/lib/python3.12/site-packages/torch/distributed/checkpoint/planner_helpers.py:418: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.[32m [repeated 15x across cluster][0m
+[36m(MegatronTrainRayActor pid=3394456, ip=172.28.82.13)[0m   device = getattr(value, "device", None)[32m [repeated 15x across cluster][0m
+
+srun: error: gh070: task 0: Exited with exit code 1
+srun: Terminating StepId=2294460.17
+srun: error: gh152: task 3: Terminated
+srun: error: gh151: task 2: Terminated
+srun: error: gh116: task 1: Terminated
+srun: Force Terminated StepId=2294460.17
+EXIT=143

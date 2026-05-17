@@ -1,0 +1,8 @@
+Using pipeline model parallel size: 4, decoder last pipeline num layers: 12
+Using pipeline model parallel size: 4, decoder last pipeline num layers: 12
+Using pipeline model parallel size: 4, decoder last pipeline num layers: 12
+Using pipeline model parallel size: 4, decoder last pipeline num layers: 12
+  successfully saved checkpoint from iteration       1 to /work/nvme/bgqz/bzhang31/models/Qwen3-30B-A3B-Thinking-2507_torch_dist [ t 1/1, p 1/4 ]
+latest_checkpointed_iteration.txt
+release
+size: 57G
